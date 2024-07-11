@@ -39,7 +39,7 @@ export const genericErrorHandler = (
   }
   // check if the retrieved error is an instance of unauthorized error
   else if (error instanceof UnauthorizedError) {
-    return res.status(HttpStatusCodes.UNAUTHORIZED).json({
+    return res.status(HttpStatusCodes.FORBIDDEN).json({
       message: error.message,
     });
   }

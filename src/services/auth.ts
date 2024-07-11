@@ -11,16 +11,13 @@ import { permission } from "process";
 export const login = async (email: string, password: string) => {
   // fetch existing user by email
   const existingUser = getUserByEmail(email);
-  console.log(existingUser);
 
   // throw error when the user data is null
   if (!existingUser) {
-    console.log("no user");
     const error = new NotFoundError("No user found with associated email.");
     throw error;
   }
 
-  console.log(existingUser);
   // check for password validation
   const isValidPassword = await bcrypt.compare(password, existingUser.password);
 
@@ -101,7 +98,7 @@ export const refreshAccessToken = (refreshToken: string) => {
     return { statusCode: 200, accessToken: accessToken };
   } catch (e) {
     if (e instanceof JsonWebTokenError) {
-      throw new InvalidError("Jwt token is expired.");
+      throw new InvalidError("Invalid token.");
     }
     throw e;
   }

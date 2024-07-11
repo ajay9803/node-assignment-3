@@ -64,7 +64,7 @@ export const updateUserById = (
 export const deleteUserById = (id: string) => {
   UserModel.deleteUserById(id);
   return {
-    statusCode: 200,
+    statusCode: 204,
     message: "User deleted successfully",
   };
 };

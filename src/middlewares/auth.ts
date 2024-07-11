@@ -47,12 +47,12 @@ export const authenticate = (
     };
 
     req.user = user;
-    console.log(req.user);
 
     next();
   } catch (e) {
+    // throw invalid token error
     if (e instanceof JsonWebTokenError) {
-      throw new InvalidError("Jwt token is expired.");
+      throw new InvalidError("Invalid token.");
     }
     throw e;
   }

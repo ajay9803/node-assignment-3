@@ -1,6 +1,7 @@
 import { NotFoundError } from "../error/not_found_error";
 import { Todo } from "../interfaces/todo";
 
+// track todo's to avoid duplicate id's
 let todosCount = 2;
 
 // initialize todos with test values
@@ -27,8 +28,11 @@ export const todos: Todo[] = [
 
 // create a todo
 export const createTodo = (todo: Omit<Todo, "id">) => {
+  // create a new todo with increased-count-id
   const newTodo = { id: `${todosCount + 1}`, ...todo };
   todos.push(newTodo);
+
+  // increase the counter of todosCount
   todosCount++;
 };
 
@@ -37,6 +41,8 @@ export const deleteTodo = (todoId: string, userId: string) => {
   const index = todos.findIndex(
     (todo) => todo.id === todoId && todo.userId === userId
   );
+
+  // delete a todo if index is greater than or equals to 0
   if (index >= 0) {
     todos.splice(index, 1);
   } else {

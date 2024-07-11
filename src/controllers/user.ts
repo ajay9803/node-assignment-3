@@ -6,6 +6,7 @@ import { NextFunction, Request, Response } from "express";
 export const createNewUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
+  // create new user
   let newUser = {
     name: name,
     email: email,
@@ -60,8 +61,11 @@ export const updateUserById = (
     };
 
     const result = UserService.updateUserById(id, user);
+
+    // send success message
     res.status(result.statusCode).send(result);
   } catch (e) {
+    // send error to generic error handler
     next(e);
   }
 };
@@ -76,8 +80,11 @@ export const deleteUserById = (
     const { id } = req.params;
 
     const result = UserService.deleteUserById(id);
-    res.status(result.statusCode).send(result);
+
+    // send success message
+    res.send(result);
   } catch (e) {
+    // send error to generic error handler
     next(e);
   }
 };

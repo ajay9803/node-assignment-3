@@ -125,7 +125,6 @@ export const updateTodoIsCompletedStatus = (
 ) => {
   try {
     const { id } = req.params;
-    const { title, description } = req.body;
 
     const user = req.user;
 
