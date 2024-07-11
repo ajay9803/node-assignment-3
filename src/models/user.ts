@@ -2,9 +2,11 @@ import { NotFoundError } from "../error/not_found_error";
 import { UnauthorizedError } from "../error/unauthorized_error";
 import { User } from "../interfaces/user";
 
+let userCount = 2;
+
 export const users: User[] = [
   {
-    id: "0",
+    id: "1",
     name: "Admin",
     email: "admin@gmail.com",
     password: "$2b$10$g8Wa7sNOjX6XKOOZ0MqUYuaPnZpT0E33bVdrRW.BSRdxLYQjIuyVq",
@@ -14,13 +16,13 @@ export const users: User[] = [
       "users.delete",
       "users.fetch",
       "todos.create",
-      "todos.update",
+      "todos.update", 
       "todos.delete",
       "todos.fetch",
     ],
   },
   {
-    id: "1",
+    id: "2",
     name: "test 1",
     email: "test1@gmail.com",
     password: "$2b$10$g8Wa7sNOjX6XKOOZ0MqUYuaPnZpT0E33bVdrRW.BSRdxLYQjIuyVq",
@@ -34,8 +36,9 @@ export const users: User[] = [
 ];
 
 // push new user to users-list
-export const createUser = (user: User) => {
-  users.push(user);
+export const createUser = (user: Omit<User, "id">) => {
+  users.push({ id: `${userCount + 1}`, ...user });
+  userCount++;
 };
 
 // fetch user by id
@@ -68,6 +71,8 @@ export const updateUserById = (
 // delete user by id
 export const deleteUserById = (id: string) => {
   const index = users.findIndex((user) => user.id === id);
+
+  // forbid admin from deleting itself
   if (index === 0) {
     throw new UnauthorizedError("Task forbidden.");
   }

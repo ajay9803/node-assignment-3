@@ -1,28 +1,42 @@
 import { NotFoundError } from "../error/not_found_error";
 import { Todo } from "../interfaces/todo";
 
+let todosCount = 2;
+
 // initialize todos with test values
 export const todos: Todo[] = [
   {
     id: "1",
     title: "Todo 1",
     description: "This is todo 1",
+    userId: "2",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isCompleted: false,
   },
   {
     id: "2",
     title: "Todo 2",
     description: "This is todo 2",
+    userId: "2",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isCompleted: false,
   },
 ];
 
 // create a todo
-export const createTodo = (todo: Todo) => {
-  todos.push(todo);
+export const createTodo = (todo: Omit<Todo, "id">) => {
+  const newTodo = { id: `${todosCount + 1}`, ...todo };
+  todos.push(newTodo);
+  todosCount++;
 };
 
 // delete a todo by id
-export const deleteTodo = (todoId: string) => {
-  const index = todos.findIndex((todo) => todo.id === todoId);
+export const deleteTodo = (todoId: string, userId: string) => {
+  const index = todos.findIndex(
+    (todo) => todo.id === todoId && todo.userId === userId
+  );
   if (index >= 0) {
     todos.splice(index, 1);
   } else {
@@ -31,25 +45,46 @@ export const deleteTodo = (todoId: string) => {
 };
 
 // update a tody by id
-export const udpateTodo = (id: string, title: string, description: string) => {
-  const todo = todos.find((todo) => todo.id === id);
+export const udpateTodo = (
+  id: string,
+  title: string,
+  description: string,
+  userId: string
+) => {
+  const todo = todos.find((todo) => todo.id === id && todo.userId === userId);
 
   if (todo) {
     todo.title = title;
     todo.description = description;
+    todo.updatedAt = new Date();
     return todo;
+  } else {
+    throw new NotFoundError("No such todo found.");
+  }
+};
+
+// update todo's is-complete status
+export const updateTodoCompletedStatus = (id: string, userId: string) => {
+  const todo = todos.find((todo) => todo.id === id && todo.userId === userId);
+
+  if (todo) {
+    todo.isCompleted = !todo.isCompleted;
+    todo.updatedAt = new Date();
+    return todo;
+  } else {
+    throw new NotFoundError("No such todo found.");
   }
 };
 
 // fetch all todos
-export const getAllTodos = () => {
-  return todos;
+export const getAllTodos = (userId: string) => {
+  return todos.filter((todo) => todo.userId === userId);
 };
 
 // fetch todo by id
-export const getTodoById = (todoId: string) => {
+export const getTodoById = (todoId: string, userId: string) => {
   const todo = todos.find((todo) => {
-    return todo.id === todoId;
+    return todo.id === todoId && todo.userId === userId;
   });
   return todo;
 };

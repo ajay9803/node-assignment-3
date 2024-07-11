@@ -1,15 +1,9 @@
 import * as TodoModel from "../models/todo";
 import { Todo } from "../interfaces/todo";
+import { NotFoundError } from "../error/not_found_error";
 
 // create todo - return success / failure result
-export const createTodo = (todo: Todo) => {
-  const todosWithId = TodoModel.todos.some((theTodo) => todo.id === theTodo.id);
-  if (todosWithId) {
-    return {
-      statusCode: 409,
-      message: `Todo with id: ${todo.id} already exists`,
-    };
-  }
+export const createTodo = (todo: Omit<Todo, "id">) => {
   TodoModel.createTodo(todo);
   return {
     statusCode: 201,
@@ -18,8 +12,8 @@ export const createTodo = (todo: Todo) => {
 };
 
 // delete todo - return success result
-export const deleteTodo = (todoId: string) => {
-  TodoModel.deleteTodo(todoId);
+export const deleteTodo = (todoId: string, userId: string) => {
+  TodoModel.deleteTodo(todoId, userId);
   return {
     statusCode: 204,
     message: "Todo deleted successfully.",
@@ -27,14 +21,11 @@ export const deleteTodo = (todoId: string) => {
 };
 
 // fetch all todos - return success / failure result
-export const getAllTodos = () => {
-  const todos = TodoModel.getAllTodos();
+export const getAllTodos = (userId: string) => {
+  const todos = TodoModel.getAllTodos(userId);
 
   if (todos.length === 0) {
-    return {
-      statusCode: 404,
-      error: "No todos found.",
-    };
+    throw new NotFoundError("No todos found.");
   } else {
     return {
       statusCode: 200,
@@ -44,14 +35,11 @@ export const getAllTodos = () => {
 };
 
 // fetch tody by id - return success / failure result
-export const getTodoById = (todoId: string) => {
-  const todo = TodoModel.getTodoById(todoId);
+export const getTodoById = (todoId: string, userId: string) => {
+  const todo = TodoModel.getTodoById(todoId, userId);
 
   if (!todo) {
-    return {
-      statusCode: 404,
-      error: `No todo found with id: ${todoId}`,
-    };
+    throw new NotFoundError(`No todo found with id: ${todoId}`);
   } else {
     return {
       statusCode: 200,
@@ -61,18 +49,29 @@ export const getTodoById = (todoId: string) => {
 };
 
 // update todo by id - return success / failure result
-export const updateTodo = (id: string, title: string, description: string) => {
-  const todo = TodoModel.udpateTodo(id, title, description);
+export const updateTodo = (
+  id: string,
+  title: string,
+  description: string,
+  userId: string
+) => {
+  TodoModel.udpateTodo(id, title, description, userId);
 
-  if (todo) {
-    return {
-      statusCode: 200,
-      message: "Todo updated successfully",
-    };
-  } else {
-    return {
-      statusCode: 404,
-      error: "Todo not found",
-    };
-  }
+  return {
+    statusCode: 200,
+    message: "Todo updated successfully",
+  };
+};
+
+// update todo's is-complete status
+export const updateTodoIsCompleteStatus = (
+  id: string,
+  userId: string
+) => {
+  TodoModel.updateTodoCompletedStatus(id, userId);
+
+  return {
+    statusCode: 200,
+    message: "Todo updated successfully",
+  };
 };

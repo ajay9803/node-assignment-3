@@ -7,7 +7,6 @@ export const createNewUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
   let newUser = {
-    id: `${users.length}`,
     name: name,
     email: email,
     password: password,

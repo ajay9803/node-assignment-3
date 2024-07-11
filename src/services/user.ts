@@ -4,7 +4,7 @@ import * as UserModel from "../models/user";
 import bcrypt from "bcrypt";
 
 // create new user
-export const createUser = async (user: User) => {
+export const createUser = async (user: Omit<User, "id">) => {
   // hash the password - to store hashed password to the users data
   const hashedPassword = await bcrypt.hash(user.password, 10);
   const newUser = {
@@ -18,7 +18,6 @@ export const createUser = async (user: User) => {
   return {
     statusCode: 201,
     message: "User created successfully",
-    user: newUser,
   };
 };
 
@@ -62,9 +61,7 @@ export const updateUserById = (
 };
 
 // delete user by id
-export const deleteUserById = (
-  id: string,
-) => {
+export const deleteUserById = (id: string) => {
   UserModel.deleteUserById(id);
   return {
     statusCode: 200,

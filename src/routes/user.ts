@@ -1,5 +1,10 @@
 import express from "express";
-import { createNewUser, deleteUserById, getUserById, updateUserById } from "../controllers/user";
+import {
+  createNewUser,
+  deleteUserById,
+  getUserById,
+  updateUserById,
+} from "../controllers/user";
 import { authenticate } from "../middlewares/auth";
 import { authorize } from "../middlewares/authorize";
 
