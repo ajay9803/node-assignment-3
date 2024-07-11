@@ -47,3 +47,27 @@ export const getUserByEmail = (email: string) => {
   // return user data: null / real data
   return data;
 };
+
+// update user by id
+export const updateUserById = (
+  id: string,
+  theUser: Omit<User, "id" | "permissions">
+) => {
+  const user = UserModel.updateUserById(id, theUser);
+  return {
+    statusCode: 200,
+    message: "User updated successfully",
+    user: user,
+  };
+};
+
+// delete user by id
+export const deleteUserById = (
+  id: string,
+) => {
+  UserModel.deleteUserById(id);
+  return {
+    statusCode: 200,
+    message: "User deleted successfully",
+  };
+};

@@ -7,10 +7,16 @@ export const createNewUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
   let newUser = {
-    id: `${users.length + 1}`,
+    id: `${users.length}`,
     name: name,
     email: email,
     password: password,
+    permissions: [
+      "todos.create",
+      "todos.update",
+      "todos.delete",
+      "todos.fetch",
+    ],
   };
 
   const result = await UserService.createUser(newUser);
@@ -32,6 +38,47 @@ export const getUserById = (
     res.status(result.statusCode).send(result);
   } catch (e) {
     // send error to generic error handler
+    next(e);
+  }
+};
+
+// controller to update user by id
+export const updateUserById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+
+    // the body only contains email, name and password
+    const { email, name, password } = req.body;
+
+    const user = {
+      email: email,
+      name: name,
+      password: password,
+    };
+
+    const result = UserService.updateUserById(id, user);
+    res.status(result.statusCode).send(result);
+  } catch (e) {
+    next(e);
+  }
+};
+
+// controller to delete user by id
+export const deleteUserById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+
+    const result = UserService.deleteUserById(id);
+    res.status(result.statusCode).send(result);
+  } catch (e) {
     next(e);
   }
 };

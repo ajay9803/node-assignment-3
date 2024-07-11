@@ -1,3 +1,4 @@
+import { NotFoundError } from "../error/not_found_error";
 import { Todo } from "../interfaces/todo";
 
 // initialize todos with test values
@@ -24,6 +25,8 @@ export const deleteTodo = (todoId: string) => {
   const index = todos.findIndex((todo) => todo.id === todoId);
   if (index >= 0) {
     todos.splice(index, 1);
+  } else {
+    throw new NotFoundError("No such todo found.");
   }
 };
 

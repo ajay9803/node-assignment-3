@@ -4,6 +4,7 @@ import { UnauthenticatedError } from "../error/unauthenticated_error";
 import loggerWithNameSpace from "../utils/logger";
 import { NotFoundError } from "../error/not_found_error";
 import { InvalidError } from "../error/invalid_error";
+import { UnauthorizedError } from "../error/unauthorized_error";
 
 const logger = loggerWithNameSpace("ErrorHandler");
 
@@ -30,16 +31,21 @@ export const genericErrorHandler = (
       message: error.message,
     });
   }
-  // check if the retrieved error is an instance of invalid
+  // check if the retrieved error is an instance of invalid error
   else if (error instanceof InvalidError) {
     return res.status(HttpStatusCodes.UNAUTHORIZED).json({
       message: error.message,
     });
   }
-
+  // check if the retrieved error is an instance of unauthorized error
+  else if (error instanceof UnauthorizedError) {
+    return res.status(HttpStatusCodes.UNAUTHORIZED).json({
+      message: error.message,
+    });
+  }
 
   // default error message - Internal Server Error
   return res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({
-    message: "Internal Server Error",
+    message: error.message || "Internal Server Error",
   });
 };

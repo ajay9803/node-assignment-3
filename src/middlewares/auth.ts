@@ -1,8 +1,10 @@
-import { NextFunction, Request, Response } from "express";
-import { verify } from "jsonwebtoken";
+import { NextFunction, Response } from "express";
+import { Request } from "../interfaces/auth";
+import { JsonWebTokenError, verify } from "jsonwebtoken";
 import config from "../config";
 import { UnauthenticatedError } from "../error/unauthenticated_error";
 import { InvalidError } from "../error/invalid_error";
+import { User } from "../interfaces/user";
 
 // authentication middleware - for verifying / authenticating user
 export const authenticate = (
@@ -28,14 +30,30 @@ export const authenticate = (
     }
 
     // verify token
-    const isValidToken = verify(token[1], config.jwt_secret!);
+    const decodedToken = verify(token[1], config.jwt_secret!) as Omit<
+      User,
+      "password"
+    >;
 
     // throw unauthenticated error - token data invalid
-    if (!isValidToken) {
+    if (!decodedToken) {
       next(new UnauthenticatedError());
     }
+    let user = {
+      id: decodedToken.id,
+      email: decodedToken.email,
+      name: decodedToken.name,
+      permissions: decodedToken.permissions,
+    };
+
+    req.user = user;
+    console.log(req.user);
+
     next();
   } catch (e) {
-    throw new InvalidError("Jwt token is expired.");
+    if (e instanceof JsonWebTokenError) {
+      throw new InvalidError("Jwt token is expired.");
+    }
+    throw e;
   }
 };
