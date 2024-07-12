@@ -28,7 +28,7 @@ export const users: User[] = [
     id: "2",
     name: "test 1",
     email: "test1@gmail.com",
-    password: "$2b$10$g8Wa7sNOjX6XKOOZ0MqUYuaPnZpT0E33bVdrRW.BSRdxLYQjIuyVq",
+    password: "$2b$10$21HE2JtlKlgtFRUPcLUq5uj5tfDhPSUB75oS3rcy5z6oBc740PRpK",
     permissions: [
       "todos.create",
       "todos.update",
