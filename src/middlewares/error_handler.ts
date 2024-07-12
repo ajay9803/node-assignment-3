@@ -5,6 +5,7 @@ import loggerWithNameSpace from "../utils/logger";
 import { NotFoundError } from "../error/not_found_error";
 import { InvalidError } from "../error/invalid_error";
 import { UnauthorizedError } from "../error/unauthorized_error";
+import { ConflictError } from "../error/conflict_error";
 
 const logger = loggerWithNameSpace("ErrorHandler");
 
@@ -40,6 +41,12 @@ export const genericErrorHandler = (
   // check if the retrieved error is an instance of unauthorized error
   else if (error instanceof UnauthorizedError) {
     return res.status(HttpStatusCodes.FORBIDDEN).json({
+      message: error.message,
+    });
+  }
+  // check if the retrieved error is an instance of conflict error
+  else if (error instanceof ConflictError) {
+    return res.status(HttpStatusCodes.CONFLICT).json({
       message: error.message,
     });
   }

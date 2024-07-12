@@ -3,7 +3,8 @@ import * as UserService from "../services/user";
 import { NextFunction, Request, Response } from "express";
 
 // controller to create new user
-export const createNewUser = async (req: Request, res: Response) => {
+export const createNewUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
   const { name, email, password } = req.body;
 
   // create new user
@@ -22,6 +23,9 @@ export const createNewUser = async (req: Request, res: Response) => {
   const result = await UserService.createUser(newUser);
   // send success message
   res.status(result.statusCode).send(result);
+}catch(e) {
+  next(e);
+}
 };
 
 // controller to fetch user by id
