@@ -2,6 +2,7 @@ import { NotFoundError } from "../error/not_found_error";
 import { User } from "../interfaces/user";
 import * as UserModel from "../models/user";
 import bcrypt from "bcrypt";
+import HttpStatusCodes from "http-status-codes";
 
 // create new user
 export const createUser = async (user: Omit<User, "id">) => {
@@ -16,7 +17,7 @@ export const createUser = async (user: Omit<User, "id">) => {
 
   // return success-message
   return {
-    statusCode: 201,
+    statusCode: HttpStatusCodes.CREATED,
     message: "User created successfully",
   };
 };
@@ -28,7 +29,7 @@ export const getUserById = (id: string) => {
   // return success-message
   if (data) {
     return {
-      statusCode: 200,
+      statusCode: HttpStatusCodes.OK,
       message: "User fetched successfully.",
       user: data,
     };
@@ -54,7 +55,7 @@ export const updateUserById = (
 ) => {
   const user = UserModel.updateUserById(id, theUser);
   return {
-    statusCode: 200,
+    statusCode: HttpStatusCodes.OK,
     message: "User updated successfully",
     user: user,
   };
@@ -64,7 +65,7 @@ export const updateUserById = (
 export const deleteUserById = (id: string) => {
   UserModel.deleteUserById(id);
   return {
-    statusCode: 204,
+    statusCode: HttpStatusCodes.OK,
     message: "User deleted successfully",
   };
 };

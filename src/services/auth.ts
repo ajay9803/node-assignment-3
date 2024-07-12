@@ -6,7 +6,7 @@ import { getUserByEmail } from "./user";
 import bcrypt from "bcrypt";
 import { verify, sign, JsonWebTokenError } from "jsonwebtoken";
 import { User } from "../interfaces/user";
-import { permission } from "process";
+import HttpStatusCodes from "http-status-codes";
 
 export const login = async (email: string, password: string) => {
   // fetch existing user by email
@@ -47,7 +47,7 @@ export const login = async (email: string, password: string) => {
 
   // return success message
   return {
-    statusCode: 200,
+    statusCode: HttpStatusCodes.OK,
     message: "User login successful.",
     user: existingUser,
     accessToken: accessToken,
@@ -95,7 +95,7 @@ export const refreshAccessToken = (refreshToken: string) => {
     });
 
     // return success message
-    return { statusCode: 200, accessToken: accessToken };
+    return { statusCode: HttpStatusCodes.OK, accessToken: accessToken };
   } catch (e) {
     if (e instanceof JsonWebTokenError) {
       throw new InvalidError("Invalid token.");

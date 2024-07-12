@@ -1,12 +1,13 @@
 import * as TodoModel from "../models/todo";
 import { Todo } from "../interfaces/todo";
 import { NotFoundError } from "../error/not_found_error";
+import HttpStatusCodes from "http-status-codes";
 
 // create todo - return success / failure result
 export const createTodo = (todo: Omit<Todo, "id">) => {
   TodoModel.createTodo(todo);
   return {
-    statusCode: 201,
+    statusCode: HttpStatusCodes.CREATED,
     message: "Todo created successfully.",
   };
 };
@@ -15,7 +16,7 @@ export const createTodo = (todo: Omit<Todo, "id">) => {
 export const deleteTodo = (todoId: string, userId: string) => {
   TodoModel.deleteTodo(todoId, userId);
   return {
-    statusCode: 204,
+    statusCode: HttpStatusCodes.OK,
     message: "Todo deleted successfully.",
   };
 };
@@ -28,7 +29,7 @@ export const getAllTodos = (userId: string) => {
     throw new NotFoundError("No todos found.");
   } else {
     return {
-      statusCode: 200,
+      statusCode: HttpStatusCodes.OK,
       message: todos,
     };
   }
@@ -42,7 +43,7 @@ export const getTodoById = (todoId: string, userId: string) => {
     throw new NotFoundError(`No todo found with id: ${todoId}`);
   } else {
     return {
-      statusCode: 200,
+      statusCode: HttpStatusCodes.OK,
       message: todo,
     };
   }
@@ -58,7 +59,7 @@ export const updateTodo = (
   TodoModel.udpateTodo(id, title, description, userId);
 
   return {
-    statusCode: 200,
+    statusCode: HttpStatusCodes.OK,
     message: "Todo updated successfully",
   };
 };
@@ -71,7 +72,7 @@ export const updateTodoIsCompleteStatus = (
   TodoModel.updateTodoCompletedStatus(id, userId);
 
   return {
-    statusCode: 200,
+    statusCode: HttpStatusCodes.OK,
     message: "Todo updated successfully",
   };
 };
