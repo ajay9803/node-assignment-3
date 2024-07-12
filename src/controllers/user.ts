@@ -3,29 +3,33 @@ import * as UserService from "../services/user";
 import { NextFunction, Request, Response } from "express";
 
 // controller to create new user
-export const createNewUser = async (req: Request, res: Response, next: NextFunction) => {
+export const createNewUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-  const { name, email, password } = req.body;
+    const { name, email, password } = req.body;
 
-  // create new user
-  let newUser = {
-    name: name,
-    email: email,
-    password: password,
-    permissions: [
-      "todos.create",
-      "todos.update",
-      "todos.delete",
-      "todos.fetch",
-    ],
-  };
+    // create new user
+    let newUser = {
+      name: name,
+      email: email,
+      password: password,
+      permissions: [
+        "todos.create",
+        "todos.update",
+        "todos.delete",
+        "todos.fetch",
+      ],
+    };
 
-  const result = await UserService.createUser(newUser);
-  // send success message
-  res.status(result.statusCode).send(result);
-}catch(e) {
-  next(e);
-}
+    const result = await UserService.createUser(newUser);
+    // send success message
+    res.status(result.statusCode).send(result);
+  } catch (e) {
+    next(e);
+  }
 };
 
 // controller to fetch user by id
